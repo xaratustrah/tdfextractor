@@ -3,7 +3,10 @@
 extracts data from TDF file structure
 needs BDIO library
 
-xaratustrah 2022
+xaratustrah
+DFreireF
+
+2022
 
 '''
 
