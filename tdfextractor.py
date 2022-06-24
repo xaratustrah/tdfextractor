@@ -28,7 +28,6 @@ def xytdf(filename):
     # not the data, just the position, tag, size...
     blocks = stream.get_directory()  # bdio.py
     for block in blocks:
-        # print(block)
         # we look for the block that we want to get the data
         if block.is_xycurve_block():  # block.py
             # We move in our "line" (stream) to the position in which starts our block
@@ -93,11 +92,9 @@ def main():
         outfilename = outfilepath + os.path.basename(filename)
 
     if args.root:
-        print('root')
         write_to_root(x, y, outfilename)
 
     if args.csv:
-        print('csv')
         write_to_csv(x, y, outfilename)
 
     if not args.root and not args.csv:
