@@ -37,7 +37,10 @@ def xytdf(filename):
             # Each type of block has it owns methods for getting the data
             x = nb.get_xvalues()  # xycurveblock.py
             y = nb.get_yvalues()  # xycurveblock.py
-    return x, y
+            x_label = nb.get_xaxis_title()
+            y_label = nb.get_yaxis_title()
+            title = nb.title
+    return x, y, x_label, y_label, title
 
 
 def write_to_root(x, y, filename, title=''):
@@ -60,12 +63,14 @@ def write_to_root(x, y, filename, title=''):
     file["th1f"] = th1f
 
 
-def write_to_csv(x, y, filename, title=''):
+def write_to_csv(x, y, filename, title='', x_label='', y_label=''):
     # x and y are lists
     x, y = np.array(x), np.array(y)
     a = np.concatenate((x, y))
     a = np.reshape(a, (2, -1)).T
-    np.savetxt(filename + '.csv', a, delimiter='|')
+    delimiter = '|'
+    np.savetxt(filename + '.csv', a, delimiter=delimiter,
+               header='{}: {} {} {}'.format(title, x_label, delimiter, y_label))
 
 
 def main():
@@ -88,14 +93,15 @@ def main():
         if not os.path.isfile(filename):
             print('File not found: {}'.format(filename))
             exit()
-        x, y = xytdf(filename)
+        x, y, x_label, y_label, title = xytdf(filename)
         outfilename = outfilepath + os.path.basename(filename)
 
     if args.root:
-        write_to_root(x, y, outfilename)
+        write_to_root(x, y, outfilename, title=title)
 
     if args.csv:
-        write_to_csv(x, y, outfilename)
+        write_to_csv(x, y, outfilename, title=title,
+                     x_label=x_label, y_label=y_label)
 
     if not args.root and not args.csv:
         print('Please specify output format.')
